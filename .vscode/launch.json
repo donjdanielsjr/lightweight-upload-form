@@ -1,0 +1,12 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Deploy Plugin to Local Site",
+			"type": "node-terminal",
+			"request": "launch",
+			"command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\deploy-plugin.ps1\"",
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}
