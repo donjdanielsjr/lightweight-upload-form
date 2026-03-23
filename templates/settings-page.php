@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap luf-admin-page">
-	<h1><?php esc_html_e( 'Diagnostics', 'lightweight-upload-form' ); ?></h1>
+	<h1><?php esc_html_e( 'Help', 'lightweight-upload-form' ); ?></h1>
 
 	<?php if ( 'success' === $test_status ) : ?>
 		<div class="notice notice-success is-dismissible">
@@ -23,6 +23,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php endif; ?>
 
 	<div class="card">
+		<h2><?php esc_html_e( 'How to Use', 'lightweight-upload-form' ); ?></h2>
+		<p><?php esc_html_e( 'Add the shortcode below to any page or post where you want the form to appear.', 'lightweight-upload-form' ); ?></p>
+		<code>[lightweight_upload_form]</code>
+		<p>
+			<?php
+			printf(
+				/* translators: 1: opening submissions link, 2: closing link tag. */
+				wp_kses(
+					__( 'New submissions are saved in %1$sUpload Form > Submissions%2$s.', 'lightweight-upload-form' ),
+					array(
+						'a' => array(
+							'href' => array(),
+						),
+					)
+				),
+				'<a href="' . esc_url( admin_url( 'admin.php?page=luf-submissions' ) ) . '">',
+				'</a>'
+			);
+			?>
+		</p>
+	</div>
+
+	<div class="card">
 		<h2><?php esc_html_e( 'Email Delivery', 'lightweight-upload-form' ); ?></h2>
 		<p><?php esc_html_e( 'This plugin uses WordPress\'s built-in email system.', 'lightweight-upload-form' ); ?></p>
 		<p><?php esc_html_e( 'On most hosting providers, emails will send automatically.', 'lightweight-upload-form' ); ?></p>
@@ -33,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			printf(
 				/* translators: 1: opening admin settings link, 2: closing link tag, 3: admin email address. */
 				wp_kses(
-					__( 'Test emails are sent to the WordPress Administration Email Address set in %1$sGeneral Settings%2$s: %3$s', 'lightweight-upload-form' ),
+					__( 'Test emails are sent to the email address set in %1$sGeneral Settings%2$s: %3$s', 'lightweight-upload-form' ),
 					array(
 						'a' => array(
 							'href' => array(),

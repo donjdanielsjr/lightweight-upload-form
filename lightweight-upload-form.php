@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Lightweight Upload Form
  * Plugin URI:  https://example.com/lightweight-upload-form
- * Description: Lightweight contact form plugin with single file upload, email notifications, and submission storage.
+ * Description: Lightweight contact form plugin with shortcode support, a single file upload, email notifications, and submission storage.
  * Version:     1.0.0
  * Author:      Don Daniels
  * Text Domain: lightweight-upload-form

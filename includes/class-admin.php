@@ -52,16 +52,26 @@ class LUF_Admin {
 			26
 		);
 
+		$submissions_hook = add_submenu_page(
+			'luf-submissions',
+			__( 'Submissions', 'lightweight-upload-form' ),
+			__( 'Submissions', 'lightweight-upload-form' ),
+			'manage_options',
+			'luf-submissions',
+			array( $this, 'render_page' )
+		);
+
 		$settings_hook = add_submenu_page(
 			'luf-submissions',
-			__( 'Diagnostics', 'lightweight-upload-form' ),
-			__( 'Diagnostics', 'lightweight-upload-form' ),
+			__( 'Help', 'lightweight-upload-form' ),
+			__( 'Help', 'lightweight-upload-form' ),
 			'manage_options',
 			'luf-settings',
 			array( $this, 'render_settings_page' )
 		);
 
 		add_action( 'load-' . $hook, array( $this, 'enqueue_assets' ) );
+		add_action( 'load-' . $submissions_hook, array( $this, 'enqueue_assets' ) );
 		add_action( 'load-' . $settings_hook, array( $this, 'enqueue_assets' ) );
 	}
 
