@@ -19,12 +19,21 @@ class LUF_Admin {
 	protected $database;
 
 	/**
+	 * Mailer service.
+	 *
+	 * @var LUF_Mailer
+	 */
+	protected $mailer;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param LUF_Database $database Database service.
+	 * @param LUF_Mailer   $mailer   Mailer service.
 	 */
-	public function __construct( $database ) {
+	public function __construct( $database, $mailer ) {
 		$this->database = $database;
+		$this->mailer   = $mailer;
 	}
 
 	/**
@@ -34,8 +43,8 @@ class LUF_Admin {
 	 */
 	public function register_menu() {
 		$hook = add_menu_page(
-			__( 'Upload Form Submissions', 'lightweight-upload-form' ),
-			__( 'Upload Form', 'lightweight-upload-form' ),
+			__( 'Submissions', 'lightweight-upload-form' ),
+			__( 'Submissions', 'lightweight-upload-form' ),
 			'manage_options',
 			'luf-submissions',
 			array( $this, 'render_page' ),
@@ -43,7 +52,17 @@ class LUF_Admin {
 			26
 		);
 
+		$settings_hook = add_submenu_page(
+			'luf-submissions',
+			__( 'Settings', 'lightweight-upload-form' ),
+			__( 'Settings', 'lightweight-upload-form' ),
+			'manage_options',
+			'luf-settings',
+			array( $this, 'render_settings_page' )
+		);
+
 		add_action( 'load-' . $hook, array( $this, 'enqueue_assets' ) );
+		add_action( 'load-' . $settings_hook, array( $this, 'enqueue_assets' ) );
 	}
 
 	/**
@@ -87,6 +106,21 @@ class LUF_Admin {
 		$submissions = $this->database->get_submissions( $per_page, $offset );
 
 		include LUF_PLUGIN_PATH . 'templates/admin-page.php';
+	}
+
+	/**
+	 * Render the settings page.
+	 *
+	 * @return void
+	 */
+	public function render_settings_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'lightweight-upload-form' ) );
+		}
+
+		$test_status = isset( $_GET['luf_test_email'] ) ? sanitize_key( wp_unslash( $_GET['luf_test_email'] ) ) : '';
+
+		include LUF_PLUGIN_PATH . 'templates/settings-page.php';
 	}
 
 	/**
@@ -139,6 +173,44 @@ class LUF_Admin {
 		}
 
 		fclose( $output );
+		exit;
+	}
+
+	/**
+	 * Send a test email from the settings page.
+	 *
+	 * @return void
+	 */
+	public function handle_test_email() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		if ( empty( $_GET['page'] ) || 'luf-settings' !== sanitize_key( wp_unslash( $_GET['page'] ) ) ) {
+			return;
+		}
+
+		if ( empty( $_GET['luf_test_email_action'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to send a test email.', 'lightweight-upload-form' ) );
+		}
+
+		check_admin_referer( 'luf_send_test_email' );
+
+		$sent = $this->mailer->send_test_email();
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'           => 'luf-settings',
+					'luf_test_email' => $sent ? 'success' : 'error',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
 		exit;
 	}
 }

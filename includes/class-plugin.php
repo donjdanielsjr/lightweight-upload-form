@@ -70,7 +70,7 @@ class LUF_Plugin {
 		$this->mailer       = new LUF_Mailer();
 		$this->form_handler = new LUF_Form_Handler( $this->validator, $this->uploader, $this->mailer, $this->database );
 		$this->shortcode    = new LUF_Shortcode();
-		$this->admin        = new LUF_Admin( $this->database );
+		$this->admin        = new LUF_Admin( $this->database, $this->mailer );
 	}
 
 	/**
@@ -84,6 +84,7 @@ class LUF_Plugin {
 		add_action( 'init', array( $this->shortcode, 'register_shortcode' ) );
 		add_action( 'admin_menu', array( $this->admin, 'register_menu' ) );
 		add_action( 'admin_init', array( $this->admin, 'handle_csv_export' ) );
+		add_action( 'admin_init', array( $this->admin, 'handle_test_email' ) );
 	}
 
 	/**

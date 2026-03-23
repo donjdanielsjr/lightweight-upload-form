@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap luf-admin-page">
-	<h1><?php esc_html_e( 'Lightweight Upload Form Submissions', 'lightweight-upload-form' ); ?></h1>
+	<h1><?php esc_html_e( 'Submissions', 'lightweight-upload-form' ); ?></h1>
 
 	<p class="luf-admin-actions">
 		<a class="button button-secondary" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=luf-submissions&luf_export=1' ), 'luf_export_csv' ) ); ?>">

@@ -58,4 +58,43 @@ class LUF_Mailer {
 
 		return wp_mail( $recipient, $subject, implode( "\n", $body_lines ), $headers, $attachments );
 	}
+
+	/**
+	 * Send a test email to confirm WordPress mail delivery.
+	 *
+	 * @return bool
+	 */
+	public function send_test_email() {
+		$recipient = luf_get_recipient_email();
+
+		if ( empty( $recipient ) ) {
+			return false;
+		}
+
+		$subject = sprintf(
+			/* translators: %s: site name. */
+			__( 'Test email from %s', 'lightweight-upload-form' ),
+			wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES )
+		);
+
+		$body = implode(
+			"\n",
+			array(
+				__( 'This is a test email from the Lightweight Upload Form plugin.', 'lightweight-upload-form' ),
+				'',
+				sprintf(
+					/* translators: %s: admin email address. */
+					__( 'It was sent using WordPress to: %s', 'lightweight-upload-form' ),
+					$recipient
+				),
+				sprintf(
+					/* translators: %s: site URL. */
+					__( 'Site: %s', 'lightweight-upload-form' ),
+					home_url( '/' )
+				),
+			)
+		);
+
+		return wp_mail( $recipient, $subject, $body );
+	}
 }

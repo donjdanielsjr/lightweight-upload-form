@@ -11,3 +11,8 @@
 .luf-admin-page .tablenav {
 	margin-top: 1rem;
 }
+
+.luf-admin-page .card {
+	max-width: 720px;
+	margin-top: 1rem;
+}
