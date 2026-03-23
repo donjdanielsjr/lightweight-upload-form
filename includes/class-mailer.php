@@ -49,14 +49,9 @@ class LUF_Mailer {
 			$body_lines[] = sprintf( __( 'Uploaded File: %s', 'lightweight-upload-form' ), $file_data['url'] );
 		}
 
-		$headers     = array( 'Reply-To: ' . $submission['email'] );
-		$attachments = array();
+		$headers = array( 'Reply-To: ' . $submission['email'] );
 
-		if ( ! empty( $file_data['path'] ) && file_exists( $file_data['path'] ) ) {
-			$attachments[] = $file_data['path'];
-		}
-
-		return wp_mail( $recipient, $subject, implode( "\n", $body_lines ), $headers, $attachments );
+		return wp_mail( $recipient, $subject, implode( "\n", $body_lines ), $headers );
 	}
 
 	/**
