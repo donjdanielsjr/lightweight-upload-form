@@ -2,7 +2,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Deploy Plugin to Local Site",
+			"name": "Build Deployment Package",
 			"type": "node-terminal",
 			"request": "launch",
 			"command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\deploy-plugin.ps1\"",
