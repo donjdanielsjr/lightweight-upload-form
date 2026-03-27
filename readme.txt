@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,12 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.3.1 =
+= 1.3.2 =
+
+* Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.
+* Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files.
+
+= 1.3.0 =
 
 * Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.
 * Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files.

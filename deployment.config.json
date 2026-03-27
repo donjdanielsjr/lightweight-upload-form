@@ -1,7 +1,7 @@
 {
   "name": "OFT Upload Form",
   "slug": "oft-upload-form",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "requires": "6.0",
   "tested": "6.8",
   "requires_php": "7.4",
@@ -14,7 +14,7 @@
   ],
   "release_history": [
     {
-      "version": "1.3.1",
+      "version": "1.3.0",
       "notes": [
         "Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.",
         "Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files."

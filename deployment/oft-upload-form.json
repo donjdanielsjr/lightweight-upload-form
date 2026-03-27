@@ -1,7 +1,7 @@
 {
     "name":  "OFT Upload Form",
     "slug":  "oft-upload-form",
-    "version":  "1.3.1",
+    "version":  "1.3.2",
     "requires":  "6.0",
     "tested":  "6.8",
     "requires_php":  "7.4",
@@ -11,7 +11,7 @@
     "sections":  {
                      "description":  "<p>Lightweight contact form with file upload &mdash; live in under a minute, no setup required.</p>\n<p>Skip bloated form builders and locked features. Just install, add the shortcode, and start receiving submissions instantly.</p>\n<p><strong>Includes:</strong></p>\n<ul>\n  <li>Name, email, and message fields</li>\n  <li>Single file upload</li>\n  <li>Instant email notifications</li>\n  <li>Built-in submission storage</li>\n</ul>\n<p>No subscriptions. No learning curve. No unnecessary features &mdash; just exactly what you need.</p>",
                      "installation":  "Install and activate the plugin.",
-                     "changelog":  "<h4>1.3.1</h4><ul><li>Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.</li><li>Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files.</li></ul><h4>1.2.0</h4><ul><li>Security-focused update with stronger protection across the plugin.</li><li>Form submissions are checked and filtered to help block spam, invalid entries, and unsafe uploads.</li><li>Uploaded files are now kept private and can only be downloaded by site administrators inside WordPress.</li><li>You can now choose which file types visitors are allowed to upload, making it easier to keep your form aligned with what your site actually needs.</li><li>Extra protections were added to reduce abuse and keep exported submission data safer to open.</li></ul><h4>1.1.0</h4><ul><li>Adds built-in update support so future improvements can be delivered more smoothly through WordPress.</li><li>Makes it easier to keep the plugin current with less manual work.</li></ul><h4>1.0.0</h4><ul><li>Initial version.</li></ul>"
+                     "changelog":  "<h4>1.3.2</h4><ul><li>Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.</li><li>Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files.</li></ul><h4>1.3.0</h4><ul><li>Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.</li><li>Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files.</li></ul><h4>1.2.0</h4><ul><li>Security-focused update with stronger protection across the plugin.</li><li>Form submissions are checked and filtered to help block spam, invalid entries, and unsafe uploads.</li><li>Uploaded files are now kept private and can only be downloaded by site administrators inside WordPress.</li><li>You can now choose which file types visitors are allowed to upload, making it easier to keep your form aligned with what your site actually needs.</li><li>Extra protections were added to reduce abuse and keep exported submission data safer to open.</li></ul><h4>1.1.0</h4><ul><li>Adds built-in update support so future improvements can be delivered more smoothly through WordPress.</li><li>Makes it easier to keep the plugin current with less manual work.</li></ul><h4>1.0.0</h4><ul><li>Initial version.</li></ul>"
                  },
     "banners":  {
 
