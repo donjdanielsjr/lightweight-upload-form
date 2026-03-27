@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,18 @@ Use the `luf_max_upload_size` filter. The default is 10 MB.
 No. Data is preserved unless the `luf_delete_data_on_uninstall` option is explicitly enabled.
 
 == Changelog ==
+
+= 1.0.3 =
+
+* Minor release version bump for self-hosted update testing.
+
+= 1.0.2 =
+
+* Simplified self-hosted update delivery to use a single `/plugin-downloads/` location for both JSON metadata and zip downloads.
+
+= 1.0.1 =
+
+* Added self-hosted native WordPress plugin updates and plugin update details support.
 
 = 1.0.0 =
 
