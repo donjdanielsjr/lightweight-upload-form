@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,38 +47,7 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.0.8 =
+= 1.0.9 =
 
-* Minor release version bump for OFT Upload Form deployment-config update testing.
-
-= 1.0.6 =
-
-* Minor release version bump for OFT Upload Form deployment-config update testing.
-
-= 1.0.5 =
-
-* Renamed the plugin slug, shortcode, text domain, internal prefixes, and update endpoints to the final OFT Upload Form identity.
-
-= 1.0.4 =
-
-* Rebranded the plugin to OFT Upload Form and updated author attribution to One Feature Trap.
-
-= 1.0.3 =
-
-* Minor release version bump for self-hosted update testing.
-
-= 1.0.2 =
-
-* Simplified self-hosted update delivery to use a single `/plugin-downloads/` location for both JSON metadata and zip downloads.
-
-= 1.0.1 =
-
-* Added self-hosted native WordPress plugin updates and plugin update details support.
-
-= 1.0.0 =
-
-* Initial release.
-
-
-
+* Initial production version.
 

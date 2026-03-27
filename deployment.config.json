@@ -1,22 +1,20 @@
 {
-    "name":  "OFT Upload Form",
-    "slug":  "oft-upload-form",
-    "version":  "1.0.8",
-    "requires":  "6.0",
-    "tested":  "6.8",
-    "requires_php":  "7.4",
-    "last_updated":  "2026-03-27",
-    "homepage":  "https://onefeaturetrap.com/",
-    "download_url":  "https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip",
-    "sections":  {
-                     "description":  "Lightweight contact form plugin with shortcode support, a single file upload field, email notifications, and submission storage.",
-                     "installation":  "Install and activate the plugin.",
-                     "changelog":  "\u003ch4\u003e1.0.8\u003c/h4\u003e\u003cul\u003e\u003cli\u003eMinor release version bump for OFT Upload Form deployment-config update testing.\u003c/li\u003e\u003c/ul\u003e"
-                 },
-    "banners":  {
-
-                },
-    "icons":  {
-
-              }
+  "name": "OFT Upload Form",
+  "slug": "oft-upload-form",
+  "version": "1.0.9",
+  "requires": "6.0",
+  "tested": "6.8",
+  "requires_php": "7.4",
+  "last_updated": "2026-03-27",
+  "homepage": "https://onefeaturetrap.com/",
+  "download_url": "https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip",
+  "release_notes": [
+    "Initial production version."
+  ],
+  "sections": {
+    "description": "<p>Lightweight contact form with file upload &mdash; live in under a minute, no setup required.</p>\n<p>Skip bloated form builders and locked features. Just install, add the shortcode, and start receiving submissions instantly.</p>\n<p><strong>Includes:</strong></p>\n<ul>\n  <li>Name, email, and message fields</li>\n  <li>Single file upload</li>\n  <li>Instant email notifications</li>\n  <li>Built-in submission storage</li>\n</ul>\n<p>No subscriptions. No learning curve. No unnecessary features &mdash; just exactly what you need.</p>",
+    "installation": "Install and activate the plugin."
+  },
+  "banners": {},
+  "icons": {}
 }

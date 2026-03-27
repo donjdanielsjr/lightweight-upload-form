@@ -31,9 +31,9 @@ The updater reads the installed version from the plugin header in `oft-upload-fo
 - `oft-upload-form.php`
   The `OFTUF_VERSION` constant should stay in sync with the plugin header.
 - `readme.txt`
-  `Stable tag:` should match the release version.
+  `Stable tag:` and the top changelog entry are synced during deployment.
 - `deployment.config.json`
-  Release metadata used to generate the deployment JSON.
+  Release metadata used to generate the deployment JSON and sync local version references during deployment.
 - `https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip`
   Release zip downloaded during updates.
 - `https://onefeaturetrap.com/plugin-downloads/oft-upload-form.json`
@@ -43,27 +43,27 @@ The updater reads the installed version from the plugin header in `oft-upload-fo
 
 1. Finish the code changes for the release.
 2. Pick the new version number, for example `1.0.7`.
-3. Update `oft-upload-form.php`:
-   - Change the plugin header `Version:`
-   - Change `define( 'OFTUF_VERSION', '...' );`
-4. Update `readme.txt`:
-   - Change `Stable tag:`
-   - Add the changelog entry
-5. Update `deployment.config.json`:
+3. Update `deployment.config.json`:
    - Change `version`
    - Change `last_updated`
-   - Change `sections.changelog`
-6. Press F5 or run the deployment task to build:
+   - Change `release_notes`
+4. Press F5 or run the deployment task to build:
    - `deployment/oft-upload-form.zip`
    - `deployment/oft-upload-form.json`
-7. Build output uses `oft-upload-form` as the zip root folder.
-8. Upload these two files to `/plugin-downloads/` on the server:
+5. The deployment script syncs these local files from `deployment.config.json` before packaging:
+   - `oft-upload-form.php` plugin header `Version:`
+   - `oft-upload-form.php` `OFTUF_VERSION`
+   - `readme.txt` `Stable tag:`
+   - `readme.txt` top changelog entry for the current version
+   - `deployment/oft-upload-form.json` `sections.changelog`
+6. Build output uses `oft-upload-form` as the zip root folder.
+7. Upload these two files to `/plugin-downloads/` on the server:
    - `oft-upload-form.json`
    - `oft-upload-form.zip`
-9. Confirm these public URLs load:
+8. Confirm these public URLs load:
    - `https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip`
    - `https://onefeaturetrap.com/plugin-downloads/oft-upload-form.json`
-10. In wp-admin, force an update check and confirm the release appears.
+9. In wp-admin, force an update check and confirm the release appears.
 
 ## Important Version Rule
 
@@ -103,6 +103,13 @@ This file is generated from `deployment.config.json` during the deployment build
 ```
 
 ## Testing In wp-admin
+
+## Release Notes Source
+
+- `deployment.config.json` stores release notes as a plain `release_notes` array.
+- The deployment script renders those notes into:
+  - HTML for `deployment/oft-upload-form.json`
+  - the current version entry in `readme.txt`
 
 ### Force an update check
 

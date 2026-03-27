@@ -2,8 +2,8 @@
 /**
  * Plugin Name: OFT Upload Form
  * Plugin URI:  https://onefeaturetrap.com/
- * Description: Lightweight contact form plugin with shortcode support, a single file upload, email notifications, and submission storage.
- * Version:     1.0.8
+ * Description: Lightweight contact form with file upload - live in under a minute, no setup required.
+ * Version:     1.0.9
  * Author:      One Feature Trap
  * Author URI:  https://onefeaturetrap.com/
  * Text Domain: oft-upload-form
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'OFTUF_VERSION', '1.0.8' );
+define( 'OFTUF_VERSION', '1.0.9' );
 define( 'OFTUF_PLUGIN_FILE', __FILE__ );
 define( 'OFTUF_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'OFTUF_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
