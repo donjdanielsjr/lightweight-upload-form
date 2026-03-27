@@ -39,8 +39,13 @@ if ($exitCode -ge 8) {
 	throw "Deployment packaging failed with robocopy exit code $exitCode."
 }
 
-Compress-Archive -Path $stagePluginRoot -DestinationPath $zipPath -Force
+& tar -a -c -f $zipPath -C $stageRoot 'oft-upload-form'
+if ($LASTEXITCODE -ne 0) {
+	throw "ZIP packaging failed with tar exit code $LASTEXITCODE."
+}
+
 Copy-Item -LiteralPath $jsonSource -Destination $jsonPath -Force
+Remove-Item -LiteralPath $stageRoot -Recurse -Force
 
 Write-Host "Deployment package created:"
 Write-Host "ZIP:  $zipPath"
