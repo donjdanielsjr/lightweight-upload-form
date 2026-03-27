@@ -48,13 +48,14 @@ class OFTUF_Validator {
 			$errors[] = __( 'Message is required.', 'oft-upload-form' );
 		}
 
+		$upload_enabled = ! isset( $post_data['oftuf_upload_enabled'] ) || '0' !== sanitize_text_field( wp_unslash( $post_data['oftuf_upload_enabled'] ) );
 		$file = isset( $files['oftuf_file'] ) ? $files['oftuf_file'] : null;
 
-		if ( oftuf_is_file_required() && ( ! $file || empty( $file['name'] ) ) ) {
+		if ( $upload_enabled && oftuf_is_file_required() && ( ! $file || empty( $file['name'] ) ) ) {
 			$errors[] = __( 'A file upload is required.', 'oft-upload-form' );
 		}
 
-		if ( $file && ! empty( $file['name'] ) ) {
+		if ( $upload_enabled && $file && ! empty( $file['name'] ) ) {
 			$file_validation = $this->validate_file( $file );
 
 			if ( ! empty( $file_validation['errors'] ) ) {

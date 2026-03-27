@@ -22,4 +22,5 @@ $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.
 
 delete_option( 'oftuf_db_version' );
 delete_option( 'oftuf_delete_data_on_uninstall' );
+delete_option( 'oftuf_allowed_extensions' );
 

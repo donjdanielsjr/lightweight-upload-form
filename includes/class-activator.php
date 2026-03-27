@@ -18,9 +18,12 @@ class OFTUF_Activator {
 	 */
 	public static function activate() {
 		require_once OFTUF_PLUGIN_PATH . 'includes/class-database.php';
+		require_once OFTUF_PLUGIN_PATH . 'includes/helpers.php';
 
 		$database = new OFTUF_Database();
 		$database->create_table();
+		add_option( 'oftuf_allowed_extensions', oftuf_get_default_allowed_extensions() );
+		oftuf_ensure_private_upload_dir();
 	}
 }
 

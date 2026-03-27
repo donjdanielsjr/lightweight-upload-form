@@ -43,17 +43,35 @@ class OFTUF_Admin {
 	 */
 	public function register_menu() {
 		$hook = add_menu_page(
-			__( 'Submissions', 'oft-upload-form' ),
+			__( 'Setup', 'oft-upload-form' ),
 			__( 'OFT Upload Form', 'oft-upload-form' ),
 			'manage_options',
-			'oftuf-submissions',
-			array( $this, 'render_page' ),
+			'oftuf-settings',
+			array( $this, 'render_settings_page' ),
 			'dashicons-feedback',
 			26
 		);
 
+		$setup_hook = add_submenu_page(
+			'oftuf-settings',
+			__( 'Setup', 'oft-upload-form' ),
+			__( 'Setup', 'oft-upload-form' ),
+			'manage_options',
+			'oftuf-settings',
+			array( $this, 'render_settings_page' )
+		);
+
+		$upload_settings_hook = add_submenu_page(
+			'oftuf-settings',
+			__( 'Settings', 'oft-upload-form' ),
+			__( 'Settings', 'oft-upload-form' ),
+			'manage_options',
+			'oftuf-upload-settings',
+			array( $this, 'render_upload_settings_page' )
+		);
+
 		$submissions_hook = add_submenu_page(
-			'oftuf-submissions',
+			'oftuf-settings',
 			__( 'Submissions', 'oft-upload-form' ),
 			__( 'Submissions', 'oft-upload-form' ),
 			'manage_options',
@@ -61,18 +79,10 @@ class OFTUF_Admin {
 			array( $this, 'render_page' )
 		);
 
-		$settings_hook = add_submenu_page(
-			'oftuf-submissions',
-			__( 'Help', 'oft-upload-form' ),
-			__( 'Help', 'oft-upload-form' ),
-			'manage_options',
-			'oftuf-settings',
-			array( $this, 'render_settings_page' )
-		);
-
 		add_action( 'load-' . $hook, array( $this, 'enqueue_assets' ) );
+		add_action( 'load-' . $setup_hook, array( $this, 'enqueue_assets' ) );
+		add_action( 'load-' . $upload_settings_hook, array( $this, 'enqueue_assets' ) );
 		add_action( 'load-' . $submissions_hook, array( $this, 'enqueue_assets' ) );
-		add_action( 'load-' . $settings_hook, array( $this, 'enqueue_assets' ) );
 	}
 
 	/**
@@ -121,7 +131,7 @@ class OFTUF_Admin {
 	}
 
 	/**
-	 * Render the settings page.
+	 * Render the help page.
 	 *
 	 * @return void
 	 */
@@ -133,6 +143,23 @@ class OFTUF_Admin {
 		$test_status = isset( $_GET['oftuf_test_email'] ) ? sanitize_key( wp_unslash( $_GET['oftuf_test_email'] ) ) : '';
 
 		include OFTUF_PLUGIN_PATH . 'templates/settings-page.php';
+	}
+
+	/**
+	 * Render the upload settings page.
+	 *
+	 * @return void
+	 */
+	public function render_upload_settings_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'oft-upload-form' ) );
+		}
+
+		$settings_status    = isset( $_GET['oftuf_settings'] ) ? sanitize_key( wp_unslash( $_GET['oftuf_settings'] ) ) : '';
+		$allowed_extensions = oftuf_get_allowed_extensions();
+		$file_type_labels   = oftuf_get_file_type_labels();
+
+		include OFTUF_PLUGIN_PATH . 'templates/upload-settings-page.php';
 	}
 
 	/**
@@ -167,17 +194,17 @@ class OFTUF_Admin {
 
 		$output = fopen( 'php://output', 'w' );
 
-		fputcsv( $output, array( 'ID', 'Name', 'Email', 'Message', 'File URL', 'Attachment ID', 'Created At' ) );
+		fputcsv( $output, array( 'ID', 'Name', 'Email', 'Message', 'File', 'Attachment ID', 'Created At' ) );
 
 		foreach ( $rows as $row ) {
 			fputcsv(
 				$output,
 				array(
 					$row['id'],
-					$row['name'],
-					$row['email'],
-					$row['message'],
-					$row['file_url'],
+					$this->neutralize_csv_cell( $row['name'] ),
+					$this->neutralize_csv_cell( $row['email'] ),
+					$this->neutralize_csv_cell( $row['message'] ),
+					$this->neutralize_csv_cell( oftuf_get_submission_file_label( $row ) ),
 					$row['attachment_id'],
 					$row['created_at'],
 				)
@@ -189,7 +216,7 @@ class OFTUF_Admin {
 	}
 
 	/**
-	 * Send a test email from the settings page.
+	 * Send a test email from the help page.
 	 *
 	 * @return void
 	 */
@@ -217,8 +244,62 @@ class OFTUF_Admin {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'           => 'oftuf-settings',
+					'page'             => 'oftuf-settings',
 					'oftuf_test_email' => $sent ? 'success' : 'error',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit;
+	}
+
+	/**
+	 * Save plugin settings.
+	 *
+	 * @return void
+	 */
+	public function handle_settings_save() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		if ( empty( $_POST['page'] ) || 'oftuf-upload-settings' !== sanitize_key( wp_unslash( $_POST['page'] ) ) ) {
+			return;
+		}
+
+		if ( empty( $_POST['oftuf_save_settings'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to save settings.', 'oft-upload-form' ) );
+		}
+
+		check_admin_referer( 'oftuf_save_settings' );
+
+		$allowed_extensions = isset( $_POST['oftuf_allowed_extensions'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['oftuf_allowed_extensions'] ) ) : array();
+		$allowed_extensions = array_values( array_intersect( $allowed_extensions, array_keys( oftuf_get_all_mime_types() ) ) );
+
+		if ( empty( $allowed_extensions ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'page'           => 'oftuf-upload-settings',
+						'oftuf_settings' => 'missing_types',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit;
+		}
+
+		update_option( 'oftuf_allowed_extensions', $allowed_extensions );
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'           => 'oftuf-upload-settings',
+					'oftuf_settings' => 'saved',
 				),
 				admin_url( 'admin.php' )
 			)
@@ -264,7 +345,7 @@ class OFTUF_Admin {
 			wp_safe_redirect(
 				add_query_arg(
 					array(
-						'page'            => 'oftuf-submissions',
+						'page'              => 'oftuf-submissions',
 						'oftuf_bulk_action' => 'none_selected',
 					),
 					admin_url( 'admin.php' )
@@ -284,7 +365,7 @@ class OFTUF_Admin {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'            => 'oftuf-submissions',
+					'page'              => 'oftuf-submissions',
 					'oftuf_bulk_action' => $action,
 					'oftuf_deleted'     => $deleted_count,
 					'oftuf_attachments' => $deleted_attachments,
@@ -292,6 +373,45 @@ class OFTUF_Admin {
 				admin_url( 'admin.php' )
 			)
 		);
+		exit;
+	}
+
+	/**
+	 * Handle secure admin-only file downloads.
+	 *
+	 * @return void
+	 */
+	public function handle_private_download() {
+		if ( ! is_admin() || empty( $_GET['oftuf_download'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to download files.', 'oft-upload-form' ) );
+		}
+
+		$submission_id = absint( $_GET['oftuf_download'] );
+
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ?? '' ) ), 'oftuf_download_submission_' . $submission_id ) ) {
+			wp_die( esc_html__( 'Security check failed.', 'oft-upload-form' ) );
+		}
+
+		$submissions = $this->database->get_submissions_by_ids( array( $submission_id ) );
+		$submission  = ! empty( $submissions ) ? $submissions[0] : null;
+
+		if ( ! $submission || empty( $submission['file_path'] ) || ! file_exists( $submission['file_path'] ) ) {
+			wp_die( esc_html__( 'The requested file could not be found.', 'oft-upload-form' ) );
+		}
+
+		$file_name = oftuf_get_submission_file_label( $submission );
+		$file_name = $file_name ? $file_name : basename( $submission['file_path'] );
+
+		nocache_headers();
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: application/octet-stream' );
+		header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( $file_name ) . '"' );
+		header( 'Content-Length: ' . filesize( $submission['file_path'] ) );
+		readfile( $submission['file_path'] );
 		exit;
 	}
 
@@ -313,6 +433,12 @@ class OFTUF_Admin {
 		$deleted = 0;
 
 		foreach ( $submissions as $submission ) {
+			if ( ! empty( $submission['file_path'] ) && file_exists( $submission['file_path'] ) ) {
+				if ( @unlink( $submission['file_path'] ) ) {
+					++$deleted;
+				}
+			}
+
 			$attachment_id = ! empty( $submission['attachment_id'] ) ? absint( $submission['attachment_id'] ) : 0;
 
 			if ( ! $attachment_id ) {
@@ -326,6 +452,20 @@ class OFTUF_Admin {
 
 		return $deleted;
 	}
+
+	/**
+	 * Neutralize spreadsheet formulas in exported CSV content.
+	 *
+	 * @param string $value Cell value.
+	 * @return string
+	 */
+	protected function neutralize_csv_cell( $value ) {
+		$value = (string) $value;
+
+		if ( preg_match( '/^\s*[=\+\-@]/', $value ) ) {
+			return "'" . $value;
+		}
+
+		return $value;
+	}
 }
-
-

@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page template.
+ * Setup page template.
  *
  * @package OFTUploadForm
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap oftuf-admin-page">
-	<h1><?php esc_html_e( 'Help', 'oft-upload-form' ); ?></h1>
+	<h1><?php esc_html_e( 'Setup', 'oft-upload-form' ); ?></h1>
 
 	<?php if ( 'success' === $test_status ) : ?>
 		<div class="notice notice-success is-dismissible">
@@ -24,8 +24,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="card">
 		<h2><?php esc_html_e( 'How to Use', 'oft-upload-form' ); ?></h2>
-		<p><?php esc_html_e( 'Add the shortcode below to any page or post where you want the form to appear.', 'oft-upload-form' ); ?></p>
+		<p><?php esc_html_e( 'Choose the shortcode that fits the kind of contact form you want to show.', 'oft-upload-form' ); ?></p>
+		<p><strong><?php esc_html_e( 'Contact form with upload', 'oft-upload-form' ); ?></strong></p>
 		<code>[oft_upload_form]</code>
+		<p><?php esc_html_e( 'Use this when you want visitors to send a message and attach a file.', 'oft-upload-form' ); ?></p>
+		<p><strong><?php esc_html_e( 'Contact form without upload', 'oft-upload-form' ); ?></strong></p>
+		<code>[oft_upload_form upload="no"]</code>
+		<p><?php esc_html_e( 'Use this when you only want a simple contact form with name, email, and message fields.', 'oft-upload-form' ); ?></p>
 		<p>
 			<?php
 			printf(
@@ -51,6 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p><?php esc_html_e( 'On most hosting providers, emails will send automatically.', 'oft-upload-form' ); ?></p>
 		<p><?php esc_html_e( 'If emails are not arriving, you may need to connect your site to an SMTP email service.', 'oft-upload-form' ); ?></p>
 		<p><?php esc_html_e( 'This helps improve delivery reliability and reduces the chance of messages going to spam.', 'oft-upload-form' ); ?></p>
+		<p><?php esc_html_e( 'Uploaded files are stored privately and can only be downloaded from wp-admin by administrators.', 'oft-upload-form' ); ?></p>
 		<p>
 			<?php
 			printf(
@@ -76,5 +82,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</p>
 	</div>
 </div>
-
-

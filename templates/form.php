@@ -42,27 +42,29 @@ $old = isset( $context['old'] ) ? $context['old'] : array();
 			<textarea id="oftuf-message" name="oftuf_message" rows="6" required><?php echo isset( $old['message'] ) ? esc_textarea( $old['message'] ) : ''; ?></textarea>
 		</div>
 
-		<div class="oftuf-field">
-			<label for="oftuf-file">
-				<?php esc_html_e( 'Upload File', 'oft-upload-form' ); ?>
-				<?php if ( ! empty( $context['file_required'] ) ) : ?>
-					<span class="oftuf-required">*</span>
-				<?php endif; ?>
-			</label>
-			<input id="oftuf-file" name="oftuf_file" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt,.zip" <?php echo ! empty( $context['file_required'] ) ? 'required' : ''; ?>>
-			<p class="oftuf-help">
-				<?php
-				echo esc_html(
-					sprintf(
-						/* translators: 1: list of extensions, 2: max file size. */
-						__( 'Allowed file types: %1$s. Maximum size: %2$s.', 'oft-upload-form' ),
-						$context['allowed_extensions'],
-						$context['max_upload_label']
-					)
-				);
-				?>
-			</p>
-		</div>
+		<?php if ( ! empty( $context['show_upload'] ) ) : ?>
+			<div class="oftuf-field">
+				<label for="oftuf-file">
+					<?php esc_html_e( 'Upload File', 'oft-upload-form' ); ?>
+					<?php if ( ! empty( $context['file_required'] ) ) : ?>
+						<span class="oftuf-required">*</span>
+					<?php endif; ?>
+				</label>
+				<input id="oftuf-file" name="oftuf_file" type="file" accept="<?php echo esc_attr( $context['accept_attribute'] ); ?>" <?php echo ! empty( $context['file_required'] ) ? 'required' : ''; ?>>
+				<p class="oftuf-help">
+					<?php
+					echo esc_html(
+						sprintf(
+							/* translators: 1: list of extensions, 2: max file size. */
+							__( 'Allowed file types: %1$s. Maximum size: %2$s.', 'oft-upload-form' ),
+							$context['allowed_extensions'],
+							$context['max_upload_label']
+						)
+					);
+					?>
+				</p>
+			</div>
+		<?php endif; ?>
 
 		<div class="oftuf-honeypot" aria-hidden="true">
 			<label for="oftuf-website"><?php esc_html_e( 'Website', 'oft-upload-form' ); ?></label>
@@ -71,6 +73,7 @@ $old = isset( $context['old'] ) ? $context['old'] : array();
 
 		<?php wp_nonce_field( 'oftuf_submit_form', 'oftuf_nonce' ); ?>
 		<input type="hidden" name="oftuf_action" value="submit_form">
+		<input type="hidden" name="oftuf_upload_enabled" value="<?php echo ! empty( $context['show_upload'] ) ? '1' : '0'; ?>">
 		<input type="hidden" name="oftuf_redirect_to" value="<?php echo esc_url( $context['redirect_to'] ); ?>">
 
 		<div class="oftuf-actions">

@@ -9,8 +9,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function oftuf_get_allowed_mime_types() {
-	$mime_types = array(
+function oftuf_get_file_type_labels() {
+	return array(
+		'pdf'  => __( 'PDF', 'oft-upload-form' ),
+		'jpg'  => __( 'JPG', 'oft-upload-form' ),
+		'jpeg' => __( 'JPEG', 'oft-upload-form' ),
+		'png'  => __( 'PNG', 'oft-upload-form' ),
+		'doc'  => __( 'DOC', 'oft-upload-form' ),
+		'docx' => __( 'DOCX', 'oft-upload-form' ),
+		'txt'  => __( 'TXT', 'oft-upload-form' ),
+		'zip'  => __( 'ZIP', 'oft-upload-form' ),
+	);
+}
+
+function oftuf_get_default_allowed_extensions() {
+	return array_keys( oftuf_get_file_type_labels() );
+}
+
+function oftuf_get_all_mime_types() {
+	return array(
 		'pdf'  => 'application/pdf',
 		'jpg'  => 'image/jpeg',
 		'jpeg' => 'image/jpeg',
@@ -20,6 +37,28 @@ function oftuf_get_allowed_mime_types() {
 		'txt'  => 'text/plain',
 		'zip'  => 'application/zip',
 	);
+}
+
+function oftuf_get_allowed_extensions() {
+	$saved_extensions = get_option( 'oftuf_allowed_extensions', oftuf_get_default_allowed_extensions() );
+	$saved_extensions = array_values(
+		array_intersect(
+			array_map( 'sanitize_key', (array) $saved_extensions ),
+			array_keys( oftuf_get_all_mime_types() )
+		)
+	);
+
+	if ( empty( $saved_extensions ) ) {
+		$saved_extensions = oftuf_get_default_allowed_extensions();
+	}
+
+	return $saved_extensions;
+}
+
+function oftuf_get_allowed_mime_types() {
+	$mime_types         = oftuf_get_all_mime_types();
+	$allowed_extensions = oftuf_get_allowed_extensions();
+	$mime_types         = array_intersect_key( $mime_types, array_flip( $allowed_extensions ) );
 
 	return (array) apply_filters( 'oftuf_allowed_mime_types', $mime_types );
 }
@@ -62,6 +101,83 @@ function oftuf_format_file_size( $bytes ) {
 
 function oftuf_get_flash_transient_key( $token ) {
 	return 'oftuf_flash_' . sanitize_key( $token );
+}
+
+function oftuf_get_private_upload_dir() {
+	$upload_dir = wp_upload_dir();
+
+	return trailingslashit( $upload_dir['basedir'] ) . 'oftuf-private';
+}
+
+function oftuf_ensure_private_upload_dir() {
+	$directory = oftuf_get_private_upload_dir();
+
+	if ( ! wp_mkdir_p( $directory ) ) {
+		return new WP_Error( 'oftuf_private_dir_failed', __( 'The private upload directory could not be created.', 'oft-upload-form' ) );
+	}
+
+	$index_file = trailingslashit( $directory ) . 'index.php';
+	if ( ! file_exists( $index_file ) ) {
+		file_put_contents( $index_file, "<?php\n// Silence is golden.\n" );
+	}
+
+	$htaccess_file = trailingslashit( $directory ) . '.htaccess';
+	if ( ! file_exists( $htaccess_file ) ) {
+		file_put_contents( $htaccess_file, "Deny from all\n" );
+	}
+
+	$web_config_file = trailingslashit( $directory ) . 'web.config';
+	if ( ! file_exists( $web_config_file ) ) {
+		file_put_contents( $web_config_file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<configuration>\n  <system.webServer>\n    <authorization>\n      <deny users=\"*\" />\n    </authorization>\n  </system.webServer>\n</configuration>\n" );
+	}
+
+	return $directory;
+}
+
+function oftuf_get_submission_download_url( $submission_id ) {
+	return wp_nonce_url(
+		add_query_arg(
+			array(
+				'oftuf_download' => absint( $submission_id ),
+			),
+			admin_url( 'admin.php' )
+		),
+		'oftuf_download_submission_' . absint( $submission_id )
+	);
+}
+
+function oftuf_get_submission_file_label( $submission ) {
+	if ( ! empty( $submission['file_url'] ) && ! wp_http_validate_url( $submission['file_url'] ) ) {
+		return $submission['file_url'];
+	}
+
+	if ( ! empty( $submission['file_path'] ) ) {
+		return basename( $submission['file_path'] );
+	}
+
+	if ( ! empty( $submission['file_url'] ) ) {
+		return $submission['file_url'];
+	}
+
+	return '';
+}
+
+function oftuf_get_client_ip() {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
+
+	return sanitize_text_field( $ip );
+}
+
+function oftuf_get_throttle_limit() {
+	return max( 1, (int) apply_filters( 'oftuf_throttle_limit', 3 ) );
+}
+
+function oftuf_get_throttle_window() {
+	return max( MINUTE_IN_SECONDS, (int) apply_filters( 'oftuf_throttle_window', 10 * MINUTE_IN_SECONDS ) );
+}
+
+function oftuf_get_throttle_transient_key( $ip ) {
+	return 'oftuf_rate_' . md5( $ip );
 }
 
 function oftuf_get_current_url() {

@@ -44,9 +44,9 @@ class OFTUF_Mailer {
 			$submission['message'],
 		);
 
-		if ( ! empty( $file_data['url'] ) ) {
+		if ( ! empty( $file_data['original_name'] ) ) {
 			$body_lines[] = '';
-			$body_lines[] = sprintf( __( 'Uploaded File: %s', 'oft-upload-form' ), $file_data['url'] );
+			$body_lines[] = sprintf( __( 'Uploaded File: %s (available in wp-admin only)', 'oft-upload-form' ), $file_data['original_name'] );
 		}
 
 		$headers = array( 'Reply-To: ' . $submission['email'] );

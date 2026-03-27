@@ -34,10 +34,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php
 				echo esc_html(
 					sprintf(
-						/* translators: 1: number of deleted submissions, 2: number of deleted attachments. */
+						/* translators: 1: number of deleted submissions, 2: number of deleted files. */
 						_n(
-							'%1$d submission deleted. %2$d attachment deleted.',
-							'%1$d submissions deleted. %2$d attachments deleted.',
+							'%1$d submission deleted. %2$d file deleted.',
+							'%1$d submissions deleted. %2$d files deleted.',
 							$deleted,
 							'oft-upload-form'
 						),
@@ -70,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<select name="action" id="bulk-action-selector-top">
 					<option value="-1"><?php esc_html_e( 'Bulk actions', 'oft-upload-form' ); ?></option>
 					<option value="delete"><?php esc_html_e( 'Delete', 'oft-upload-form' ); ?></option>
-					<option value="delete_with_attachments"><?php esc_html_e( 'Delete with attachments', 'oft-upload-form' ); ?></option>
+					<option value="delete_with_attachments"><?php esc_html_e( 'Delete with files', 'oft-upload-form' ); ?></option>
 				</select>
 				<?php submit_button( __( 'Apply', 'oft-upload-form' ), 'action', 'doaction', false ); ?>
 			</div>
@@ -108,7 +108,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 							</td>
 							<td><?php echo esc_html( wp_trim_words( $submission['message'], 20, '...' ) ); ?></td>
 							<td>
-								<?php if ( ! empty( $submission['file_url'] ) ) : ?>
+								<?php if ( ! empty( $submission['file_path'] ) ) : ?>
+									<a href="<?php echo esc_url( oftuf_get_submission_download_url( $submission['id'] ) ); ?>">
+										<?php echo esc_html( oftuf_get_submission_file_label( $submission ) ); ?>
+									</a>
+								<?php elseif ( ! empty( $submission['file_url'] ) ) : ?>
 									<a href="<?php echo esc_url( $submission['file_url'] ); ?>" target="_blank" rel="noopener noreferrer">
 										<?php echo esc_html( $submission['file_url'] ); ?>
 									</a>
@@ -142,7 +146,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<select name="action2" id="bulk-action-selector-bottom">
 					<option value="-1"><?php esc_html_e( 'Bulk actions', 'oft-upload-form' ); ?></option>
 					<option value="delete"><?php esc_html_e( 'Delete', 'oft-upload-form' ); ?></option>
-					<option value="delete_with_attachments"><?php esc_html_e( 'Delete with attachments', 'oft-upload-form' ); ?></option>
+					<option value="delete_with_attachments"><?php esc_html_e( 'Delete with files', 'oft-upload-form' ); ?></option>
 				</select>
 				<?php submit_button( __( 'Apply', 'oft-upload-form' ), 'action', 'doaction2', false ); ?>
 			</div>

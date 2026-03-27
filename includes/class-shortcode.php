@@ -31,14 +31,26 @@ class OFTUF_Shortcode {
 
 		$flash = $this->get_flash_data();
 		$url   = oftuf_get_current_url();
+		$atts  = shortcode_atts(
+			array(
+				'upload' => 'yes',
+			),
+			$atts,
+			'oft_upload_form'
+		);
+		$show_upload = ! in_array( strtolower( (string) $atts['upload'] ), array( 'no', 'false', '0', 'off' ), true );
 
 		$context = array(
 			'action'             => esc_url( $url ),
 			'redirect_to'        => esc_url( $url ),
 			'max_upload_size'    => oftuf_get_max_upload_size(),
 			'max_upload_label'   => oftuf_format_file_size( oftuf_get_max_upload_size() ),
-			'allowed_extensions' => implode( ', ', array_keys( oftuf_get_allowed_mime_types() ) ),
-			'file_required'      => oftuf_is_file_required(),
+			'allowed_extensions' => implode( ', ', oftuf_get_allowed_extensions() ),
+			'accept_attribute'   => implode( ',', array_map( static function( $extension ) {
+				return '.' . $extension;
+			}, oftuf_get_allowed_extensions() ) ),
+			'show_upload'        => $show_upload,
+			'file_required'      => $show_upload && oftuf_is_file_required(),
 			'notice_type'        => isset( $flash['type'] ) ? $flash['type'] : '',
 			'messages'           => isset( $flash['messages'] ) ? (array) $flash['messages'] : array(),
 			'old'                => isset( $flash['old'] ) ? (array) $flash['old'] : array(),

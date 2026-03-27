@@ -566,7 +566,36 @@ class OFT_Plugin_Updater {
 			return false;
 		}
 
+		if ( ! $this->is_trusted_package_url( $normalized['download_url'] ) ) {
+			return false;
+		}
+
 		return $normalized;
+	}
+
+	/**
+	 * Ensure package downloads stay on the trusted metadata host over HTTPS.
+	 *
+	 * @param string $package_url Package URL.
+	 * @return bool
+	 */
+	protected function is_trusted_package_url( $package_url ) {
+		$package_parts  = wp_parse_url( $package_url );
+		$metadata_parts = wp_parse_url( $this->metadata_url );
+
+		if ( empty( $package_parts['scheme'] ) || empty( $package_parts['host'] ) ) {
+			return false;
+		}
+
+		if ( 'https' !== strtolower( $package_parts['scheme'] ) ) {
+			return false;
+		}
+
+		if ( empty( $metadata_parts['host'] ) ) {
+			return false;
+		}
+
+		return strtolower( $package_parts['host'] ) === strtolower( $metadata_parts['host'] );
 	}
 
 	/**
