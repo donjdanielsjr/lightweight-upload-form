@@ -56,6 +56,18 @@ function Get-ReadmeChangelogEntry {
 	return ($lines -join [Environment]::NewLine)
 }
 
+function Get-HtmlChangelogEntry {
+	param(
+		[Parameter(Mandatory = $true)]
+		[string]$Version,
+
+		[Parameter(Mandatory = $true)]
+		[string[]]$Items
+	)
+
+	return '<h4>' + [System.Security.SecurityElement]::Escape($Version) + '</h4>' + (ConvertTo-HtmlList -Items $Items)
+}
+
 if (-not (Test-Path -LiteralPath $configPath)) {
 	throw "Missing deployment config: $configPath"
 }
@@ -72,6 +84,50 @@ $releaseNotes = @($config.release_notes | Where-Object { $_ -and $_.Trim() })
 if ($releaseNotes.Count -eq 0) {
 	throw "release_notes in $configPath must contain at least one item."
 }
+
+$releaseHistory = @()
+if ($config.PSObject.Properties.Name.Contains('release_history')) {
+	$releaseHistory = @($config.release_history)
+}
+
+if ($releaseHistory.Count -eq 0) {
+	$releaseHistory = @(
+		[pscustomobject]@{
+			version = $config.version
+			notes   = $releaseNotes
+		}
+	)
+}
+
+$normalizedHistory = @()
+foreach ($entry in $releaseHistory) {
+	if (-not $entry.PSObject.Properties.Name.Contains('version')) {
+		throw "Each release_history entry in $configPath must include a version."
+	}
+
+	$entryVersion = [string]$entry.version
+	$entryNotes = @($entry.notes | Where-Object { $_ -and $_.Trim() })
+
+	if ([string]::IsNullOrWhiteSpace($entryVersion) -or $entryNotes.Count -eq 0) {
+		throw "Each release_history entry in $configPath must include a version and at least one note."
+	}
+
+	$normalizedHistory += [pscustomobject]@{
+		version = $entryVersion
+		notes   = $entryNotes
+	}
+}
+
+$currentEntry = $normalizedHistory | Where-Object { $_.version -eq $config.version } | Select-Object -First 1
+if (-not $currentEntry) {
+	$normalizedHistory = ,([pscustomobject]@{
+		version = $config.version
+		notes   = $releaseNotes
+	}) + $normalizedHistory
+	$currentEntry = $normalizedHistory[0]
+}
+
+$currentEntry.notes = $releaseNotes
 
 if ($pluginFileContent -notmatch "Version:\s*([0-9]+(?:\.[0-9]+)*)") {
 	throw "Could not read plugin version from $mainPluginFile"
@@ -101,23 +157,16 @@ $updatedReadmeContent = [regex]::Replace(
 	'${1}' + $config.version,
 	1
 )
-$newReadmeEntry = Get-ReadmeChangelogEntry -Version $config.version -Items $releaseNotes
-$versionPattern = '(?ms)^= ' + [regex]::Escape($config.version) + ' =\r?\n(?:\r?\n)?(?:(?!^= [0-9]+(?:\.[0-9]+)* =).*(?:\r?\n|$))*'
-if ([regex]::IsMatch($updatedReadmeContent, $versionPattern)) {
-	$updatedReadmeContent = [regex]::Replace(
-		$updatedReadmeContent,
-		$versionPattern,
-		$newReadmeEntry + [Environment]::NewLine + [Environment]::NewLine,
-		1
-	)
-} else {
-	$updatedReadmeContent = [regex]::Replace(
-		$updatedReadmeContent,
-		'(?ms)(== Changelog ==\r?\n\r?\n)',
-		'${1}' + $newReadmeEntry + [Environment]::NewLine + [Environment]::NewLine,
-		1
-	)
+$readmeChangelogEntries = foreach ($entry in $normalizedHistory) {
+	Get-ReadmeChangelogEntry -Version $entry.version -Items $entry.notes
 }
+$readmeChangelogBlock = ($readmeChangelogEntries -join ([Environment]::NewLine + [Environment]::NewLine)) + [Environment]::NewLine
+$updatedReadmeContent = [regex]::Replace(
+	$updatedReadmeContent,
+	'(?ms)(== Changelog ==\r?\n\r?\n).*$',
+	'${1}' + $readmeChangelogBlock,
+	1
+)
 Set-FileContentIfChanged -Path $readmePath -Content $updatedReadmeContent
 
 if (Test-Path -LiteralPath $deploymentRoot) {
@@ -150,7 +199,9 @@ if ($exitCode -ge 8) {
 $jsonSections = [ordered]@{
 	description  = $config.sections.description
 	installation = $config.sections.installation
-	changelog    = '<h4>' + [System.Security.SecurityElement]::Escape($config.version) + '</h4>' + (ConvertTo-HtmlList -Items $releaseNotes)
+	changelog    = (($normalizedHistory | ForEach-Object {
+		Get-HtmlChangelogEntry -Version $_.version -Items $_.notes
+	}) -join '')
 }
 
 $jsonConfig = [ordered]@{

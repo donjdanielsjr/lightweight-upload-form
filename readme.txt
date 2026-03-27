@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,14 +47,10 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.3.0 =
+= 1.3.1 =
 
-* Security-focused update with stronger protection across the plugin.
-* Form submissions are checked and filtered to help block spam, invalid entries, and unsafe uploads.
-* Uploaded files are now kept private and can only be downloaded by site administrators inside WordPress.
-* You can now choose which file types visitors are allowed to upload, making it easier to keep your form aligned with what your site actually needs.
-* You can also use a simple contact form without file uploads when you want a cleaner, more streamlined form experience.
-* Extra protections were added to reduce abuse and keep exported submission data safer to open.
+* Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.
+* Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files.
 
 = 1.2.0 =
 
@@ -64,3 +60,11 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 * You can now choose which file types visitors are allowed to upload, making it easier to keep your form aligned with what your site actually needs.
 * Extra protections were added to reduce abuse and keep exported submission data safer to open.
 
+= 1.1.0 =
+
+* Adds built-in update support so future improvements can be delivered more smoothly through WordPress.
+* Makes it easier to keep the plugin current with less manual work.
+
+= 1.0.0 =
+
+* Initial version.

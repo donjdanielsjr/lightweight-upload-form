@@ -1,7 +1,7 @@
 {
   "name": "OFT Upload Form",
   "slug": "oft-upload-form",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "requires": "6.0",
   "tested": "6.8",
   "requires_php": "7.4",
@@ -9,12 +9,40 @@
   "homepage": "https://onefeaturetrap.com/",
   "download_url": "https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip",
   "release_notes": [
-    "Security-focused update with stronger protection across the plugin.",
-    "Form submissions are checked and filtered to help block spam, invalid entries, and unsafe uploads.",
-    "Uploaded files are now kept private and can only be downloaded by site administrators inside WordPress.",
-    "You can now choose which file types visitors are allowed to upload, making it easier to keep your form aligned with what your site actually needs.",
-    "You can also use a simple contact form without file uploads when you want a cleaner, more streamlined form experience.",
-    "Extra protections were added to reduce abuse and keep exported submission data safer to open."
+    "Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.",
+    "Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files."
+  ],
+  "release_history": [
+    {
+      "version": "1.3.1",
+      "notes": [
+        "Adds a simple contact form option without file uploads for a cleaner, more streamlined form experience.",
+        "Makes it easier to use the plugin for basic contact forms when you do not need visitors to attach files."
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "notes": [
+        "Security-focused update with stronger protection across the plugin.",
+        "Form submissions are checked and filtered to help block spam, invalid entries, and unsafe uploads.",
+        "Uploaded files are now kept private and can only be downloaded by site administrators inside WordPress.",
+        "You can now choose which file types visitors are allowed to upload, making it easier to keep your form aligned with what your site actually needs.",
+        "Extra protections were added to reduce abuse and keep exported submission data safer to open."
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "notes": [
+        "Adds built-in update support so future improvements can be delivered more smoothly through WordPress.",
+        "Makes it easier to keep the plugin current with less manual work."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "notes": [
+        "Initial version."
+      ]
+    }
   ],
   "sections": {
     "description": "<p>Lightweight contact form with file upload &mdash; live in under a minute, no setup required.</p>\n<p>Skip bloated form builders and locked features. Just install, add the shortcode, and start receiving submissions instantly.</p>\n<p><strong>Includes:</strong></p>\n<ul>\n  <li>Name, email, and message fields</li>\n  <li>Single file upload</li>\n  <li>Instant email notifications</li>\n  <li>Built-in submission storage</li>\n</ul>\n<p>No subscriptions. No learning curve. No unnecessary features &mdash; just exactly what you need.</p>",
