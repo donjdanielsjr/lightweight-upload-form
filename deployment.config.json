@@ -4,7 +4,7 @@
   "_note": "Previous build: 1.6.1",
   "version": "1.6.7-beta.3",
   "requires": "6.0",
-  "tested": "6.8",
+  "tested": "6.9.4",
   "requires_php": "7.4",
   "last_updated": "2026-03-28",
   "homepage": "https://onefeaturetrap.com/",
