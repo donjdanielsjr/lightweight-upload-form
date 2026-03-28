@@ -14,7 +14,7 @@
   ],
   "release_history": [
     {
-      "version": "1.4",
+      "version": "1.4.0",
       "notes": [
         "Adds CSV export so you can quickly download and work with your saved submissions in Excel or other spreadsheet apps.",
         "Makes it easier to review, share, and organize form entries outside WordPress."
