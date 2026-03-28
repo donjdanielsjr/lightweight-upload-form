@@ -2,10 +2,17 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Build Deployment Package",
+			"name": "Build Beta Package",
 			"type": "node-terminal",
 			"request": "launch",
-			"command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\deploy-plugin.ps1\"",
+			"command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\deploy-plugin.ps1\" -Track beta",
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"name": "Build Stable Package",
+			"type": "node-terminal",
+			"request": "launch",
+			"command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\deploy-plugin.ps1\" -Track stable",
 			"cwd": "${workspaceFolder}"
 		}
 	]

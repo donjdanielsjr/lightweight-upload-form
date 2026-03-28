@@ -64,14 +64,19 @@ function Normalize-History {
 }
 
 function Get-UpdatedPluginFileContent {
-	param([string]$Content,[string]$Version,[string]$VersionPattern)
+	param([string]$Content,[string]$Version,[string]$Requires,[string]$RequiresPhp,[string]$VersionPattern)
 	$updated = [regex]::Replace($Content, "(?m)^(\s*\*\s*Version:\s*)$VersionPattern", '${1}' + $Version, 1)
+	$updated = [regex]::Replace($updated, '(?m)^(\s*\*\s*Requires at least:\s*).+$', '${1}' + $Requires, 1)
+	$updated = [regex]::Replace($updated, '(?m)^(\s*\*\s*Requires PHP:\s*).+$', '${1}' + $RequiresPhp, 1)
 	$updated = [regex]::Replace($updated, "define\(\s*'OFTUF_VERSION'\s*,\s*'$VersionPattern'\s*\);", "define( 'OFTUF_VERSION', '$Version' );", 1)
 	return $updated
 }
 
 function Get-UpdatedReadmeContent {
-	param([string]$Content,[string]$StableVersion,[array]$History)
+	param([string]$Content,[string]$StableVersion,[string]$Requires,[string]$Tested,[string]$RequiresPhp,[array]$History)
+	$updated = [regex]::Replace($Content, '(?m)^(Requires at least:\s*).+$', '${1}' + $Requires, 1)
+	$updated = [regex]::Replace($Content, '(?m)^(Tested up to:\s*).+$', '${1}' + $Tested, 1)
+	$updated = [regex]::Replace($Content, '(?m)^(Requires PHP:\s*).+$', '${1}' + $RequiresPhp, 1)
 	$updated = [regex]::Replace($Content, "(?m)^(Stable tag:\s*)$versionPattern$", '${1}' + $StableVersion, 1)
 	$entries = foreach ($entry in $History) { Get-ReadmeChangelogEntry -Version $entry.version -Items $entry.notes }
 	$block = ($entries -join ([Environment]::NewLine + [Environment]::NewLine)) + [Environment]::NewLine
@@ -105,7 +110,7 @@ if ($pluginFileContent -notmatch "define\(\s*'OFTUF_VERSION'\s*,\s*'$versionPatt
 	throw "Could not read OFTUF_VERSION from $mainPluginFile"
 }
 
-$updatedPluginFileContent = Get-UpdatedPluginFileContent -Content $pluginFileContent -Version ([string]$config.version) -VersionPattern $versionPattern
+$updatedPluginFileContent = Get-UpdatedPluginFileContent -Content $pluginFileContent -Version ([string]$config.version) -Requires ([string]$config.requires) -RequiresPhp ([string]$config.requires_php) -VersionPattern $versionPattern
 Set-FileContentIfChanged -Path $mainPluginFile -Content $updatedPluginFileContent
 
 $stableTagVersion = if ('stable' -eq $Track) { [string]$config.version } else { $readmeContent | Select-String -Pattern "(?m)^Stable tag:\s*($versionPattern)$" | ForEach-Object { $_.Matches[0].Groups[1].Value } | Select-Object -First 1 }
@@ -113,7 +118,7 @@ if ([string]::IsNullOrWhiteSpace($stableTagVersion)) {
 	$stableTagVersion = [string]$config.version
 }
 
-$updatedReadmeContent = Get-UpdatedReadmeContent -Content $readmeContent -StableVersion $stableTagVersion -History $history
+$updatedReadmeContent = Get-UpdatedReadmeContent -Content $readmeContent -StableVersion $stableTagVersion -Requires ([string]$config.requires) -Tested ([string]$config.tested) -RequiresPhp ([string]$config.requires_php) -History $history
 Set-FileContentIfChanged -Path $readmePath -Content $updatedReadmeContent
 
 if (-not (Test-Path -LiteralPath $deploymentRoot)) {
@@ -155,11 +160,11 @@ if ($LASTEXITCODE -ge 8) {
 $stagePluginFile = Join-Path $stagePluginRoot 'oft-upload-form.php'
 $stageReadmePath = Join-Path $stagePluginRoot 'readme.txt'
 $stagePluginContent = Get-Content $stagePluginFile -Raw
-$stagePluginContent = Get-UpdatedPluginFileContent -Content $stagePluginContent -Version ([string]$config.version) -VersionPattern $versionPattern
+$stagePluginContent = Get-UpdatedPluginFileContent -Content $stagePluginContent -Version ([string]$config.version) -Requires ([string]$config.requires) -RequiresPhp ([string]$config.requires_php) -VersionPattern $versionPattern
 Set-FileContentIfChanged -Path $stagePluginFile -Content $stagePluginContent
 
 $stageReadmeContent = Get-Content $stageReadmePath -Raw
-$stageReadmeContent = Get-UpdatedReadmeContent -Content $stageReadmeContent -StableVersion $stableTagVersion -History $history
+$stageReadmeContent = Get-UpdatedReadmeContent -Content $stageReadmeContent -StableVersion $stableTagVersion -Requires ([string]$config.requires) -Tested ([string]$config.tested) -RequiresPhp ([string]$config.requires_php) -History $history
 Set-FileContentIfChanged -Path $stageReadmePath -Content $stageReadmeContent
 
 $trackUrlBase = 'https://onefeaturetrap.com/plugin-downloads/' + $config.slug + '/' + $Track
@@ -198,6 +203,13 @@ $json = ($jsonConfig | ConvertTo-Json -Depth 10).Replace('\u003c', '<').Replace(
 
 if (Test-Path -LiteralPath $trackStageRoot) {
 	Remove-Item -LiteralPath $trackStageRoot -Recurse -Force
+}
+
+if (Test-Path -LiteralPath $stageRoot) {
+	$remainingStageItems = Get-ChildItem -LiteralPath $stageRoot -Force -ErrorAction SilentlyContinue
+	if (-not $remainingStageItems) {
+		Remove-Item -LiteralPath $stageRoot -Force
+	}
 }
 
 Write-Host "Deployment package created:"

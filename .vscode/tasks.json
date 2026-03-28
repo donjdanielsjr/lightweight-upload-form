@@ -2,14 +2,37 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build OFT Upload Form Deployment Package",
+			"label": "Build OFT Upload Form Beta",
 			"type": "shell",
 			"command": "powershell",
 			"args": [
 				"-ExecutionPolicy",
 				"Bypass",
 				"-File",
-				"${workspaceFolder}\\scripts\\deploy-plugin.ps1"
+				"${workspaceFolder}\\scripts\\deploy-plugin.ps1",
+				"-Track",
+				"beta"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build OFT Upload Form Stable",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"${workspaceFolder}\\scripts\\deploy-plugin.ps1",
+				"-Track",
+				"stable"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"

@@ -1,10 +1,10 @@
 === OFT Upload Form ===
 Contributors: codex
 Tags: contact form, file upload, shortcode
-Requires at least: 6.2
+Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.6.6
+Stable tag: 1.6.7-beta.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,12 +47,7 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.6.7-beta.1 =
-
-* Adds Stable and Beta update tracks so test sites can follow beta builds without production installs seeing them.
-* Lets admins switch tracks immediately from the plugin setup screen while keeping the updater logic reusable inside includes/updater.
-
-= 1.6.6 =
+= 1.6.7-beta.2 =
 
 * Adds a file size setting so you can choose the upload limit that fits your form without editing code.
 * Lets you allow larger file sizes all the way up to what your website can support.
@@ -61,11 +56,6 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 * Adds a file size setting so you can choose the upload limit that fits your form without editing code.
 * Lets you allow larger file sizes all the way up to what your website can support.
-
-= 1.5.9 =
-
-* Adds a file size setting so you can choose the upload limit that fits your form without editing code.
-* Makes it easier to balance convenience and control by only showing size options your hosting setup can support.
 
 = 1.5.0 =
 
