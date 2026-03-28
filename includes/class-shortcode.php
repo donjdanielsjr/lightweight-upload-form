@@ -45,7 +45,7 @@ class OFTUF_Shortcode {
 			'action'             => esc_url( $url ),
 			'redirect_to'        => esc_url( $url ),
 			'max_upload_size'    => $max_upload_size,
-			'max_upload_label'   => oftuf_get_max_upload_size_label(),
+			'max_upload_label'   => oftuf_format_file_size( $max_upload_size ),
 			'allowed_extensions' => implode( ', ', oftuf_get_allowed_extensions() ),
 			'accept_attribute'   => implode( ',', array_map( static function( $extension ) {
 				return '.' . $extension;

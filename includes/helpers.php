@@ -86,12 +86,15 @@ function oftuf_parse_size_to_bytes( $size ) {
 }
 
 function oftuf_get_server_upload_limit() {
-	$limits = array_filter(
-		array(
-			oftuf_parse_size_to_bytes( ini_get( 'upload_max_filesize' ) ),
-			oftuf_parse_size_to_bytes( ini_get( 'post_max_size' ) ),
-		)
-	);
+	$limits = array_filter( array() );
+
+	if ( function_exists( 'wp_max_upload_size' ) ) {
+		$limits[] = (int) wp_max_upload_size();
+	}
+
+	$limits[] = oftuf_parse_size_to_bytes( ini_get( 'upload_max_filesize' ) );
+	$limits[] = oftuf_parse_size_to_bytes( ini_get( 'post_max_size' ) );
+	$limits   = array_filter( $limits );
 
 	if ( empty( $limits ) ) {
 		return 0;
@@ -101,13 +104,32 @@ function oftuf_get_server_upload_limit() {
 }
 
 function oftuf_get_upload_size_choice_values() {
-	return array( 2, 5, 10, 15, 25 );
+	$server_limit       = oftuf_get_server_upload_limit();
+	$server_limit_mb    = $server_limit > 0 ? (int) floor( $server_limit / MB_IN_BYTES ) : 25;
+	$base_choices       = array( 2, 5, 10, 15, 25, 30 );
+	$dynamic_choices    = array();
+
+	foreach ( $base_choices as $choice_mb ) {
+		if ( $choice_mb <= $server_limit_mb ) {
+			$dynamic_choices[] = $choice_mb;
+		}
+	}
+
+	if ( $server_limit_mb >= 30 ) {
+		for ( $choice_mb = 40; $choice_mb <= $server_limit_mb; $choice_mb += 10 ) {
+			$dynamic_choices[] = $choice_mb;
+		}
+	}
+
+	$dynamic_choices = array_values( array_unique( $dynamic_choices ) );
+	sort( $dynamic_choices, SORT_NUMERIC );
+
+	return $dynamic_choices;
 }
 
 function oftuf_get_available_upload_size_choices() {
-	$plugin_cap   = 25 * MB_IN_BYTES;
 	$server_limit = oftuf_get_server_upload_limit();
-	$effective_max = $server_limit > 0 ? min( $plugin_cap, $server_limit ) : $plugin_cap;
+	$effective_max = $server_limit > 0 ? $server_limit : 25 * MB_IN_BYTES;
 	$choices      = array();
 
 	foreach ( oftuf_get_upload_size_choice_values() as $size_mb ) {
@@ -146,38 +168,17 @@ function oftuf_get_default_upload_size() {
 }
 
 function oftuf_get_saved_upload_size() {
-	$choices    = oftuf_get_available_upload_size_choices();
 	$saved_size = (int) get_option( 'oftuf_max_upload_size', oftuf_get_default_upload_size() );
 
-	if ( isset( $choices[ $saved_size ] ) ) {
+	if ( $saved_size > 0 ) {
 		return $saved_size;
 	}
 
-	if ( empty( $choices ) ) {
-		return oftuf_get_default_upload_size();
-	}
-
-	$valid_sizes = array_keys( $choices );
-	rsort( $valid_sizes, SORT_NUMERIC );
-
-	foreach ( $valid_sizes as $valid_size ) {
-		if ( $saved_size >= $valid_size ) {
-			return $valid_size;
-		}
-	}
-
-	return min( $valid_sizes );
+	return oftuf_get_default_upload_size();
 }
 
 function oftuf_get_effective_max_upload_size() {
-	$saved_size   = oftuf_get_saved_upload_size();
-	$server_limit = oftuf_get_server_upload_limit();
-
-	if ( $server_limit > 0 ) {
-		return min( $saved_size, $server_limit );
-	}
-
-	return $saved_size;
+	return oftuf_get_saved_upload_size();
 }
 
 function oftuf_get_max_upload_size() {

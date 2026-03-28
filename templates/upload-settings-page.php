@@ -26,19 +26,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h2><?php esc_html_e( 'Upload Settings', 'oft-upload-form' ); ?></h2>
 		<p><?php esc_html_e( 'Choose the file types your form accepts. Keep this list as small as possible.', 'oft-upload-form' ); ?></p>
 		<p><?php esc_html_e( 'Risk note: Office documents and ZIP files can carry malware or unsafe content. PDFs and images are generally the safest options.', 'oft-upload-form' ); ?></p>
-		<p><?php esc_html_e( 'Choose the largest file size you want to allow. Available options are automatically limited by your hosting configuration and capped at 25 MB.', 'oft-upload-form' ); ?></p>
+		<p><?php esc_html_e( 'Choose the largest file size you want to allow. Available options are automatically limited by your hosting setup.', 'oft-upload-form' ); ?></p>
 		<?php if ( $host_limit_notice ) : ?>
 			<p>
 				<?php
 				echo esc_html(
 					sprintf(
 						/* translators: %s: host upload limit. */
-						__( 'Hosting disclosure: your server currently limits uploads to %s, so larger options are not shown here.', 'oft-upload-form' ),
+						__( 'Your current hosting setup allows file uploads up to %s, so larger options are hidden here.', 'oft-upload-form' ),
 						oftuf_format_file_size( $server_upload_limit )
 					)
 				);
 				?>
 			</p>
+			<p><?php esc_html_e( 'If you want to allow larger files, ask your host to raise the site upload limit or update your PHP/server upload settings.', 'oft-upload-form' ); ?></p>
 		<?php endif; ?>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=oftuf-upload-settings' ) ); ?>">

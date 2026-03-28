@@ -163,6 +163,11 @@ class OFTUF_Admin {
 		$server_upload_limit = oftuf_get_server_upload_limit();
 		$host_limit_notice = $server_upload_limit > 0 && $server_upload_limit < 25 * MB_IN_BYTES;
 
+		if ( ! isset( $upload_size_choices[ $selected_upload_size ] ) ) {
+			$available_sizes      = array_keys( $upload_size_choices );
+			$selected_upload_size = ! empty( $available_sizes ) ? max( $available_sizes ) : oftuf_get_default_upload_size();
+		}
+
 		include OFTUF_PLUGIN_PATH . 'templates/upload-settings-page.php';
 	}
 

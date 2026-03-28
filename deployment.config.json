@@ -1,7 +1,7 @@
 {
   "name": "OFT Upload Form",
   "slug": "oft-upload-form",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "requires": "6.0",
   "tested": "6.8",
   "requires_php": "7.4",
@@ -10,9 +10,23 @@
   "download_url": "https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip",
   "release_notes": [
     "Adds a file size setting so you can choose the upload limit that fits your form without editing code.",
-    "Makes it easier to balance convenience and control by only showing size options your hosting setup can support."
+    "Lets you allow larger file sizes all the way up to what your website can support."
   ],
   "release_history": [
+    {
+      "version": "1.6.0",
+      "notes": [
+        "Adds a file size setting so you can choose the upload limit that fits your form without editing code.",
+        "Lets you allow larger file sizes all the way up to what your website can support."
+      ]
+    },
+    {
+      "version": "1.5.9",
+      "notes": [
+        "Adds a file size setting so you can choose the upload limit that fits your form without editing code.",
+        "Makes it easier to balance convenience and control by only showing size options your hosting setup can support."
+      ]
+    },
     {
       "version": "1.5.0",
       "notes": [
