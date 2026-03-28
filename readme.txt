@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.4
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,12 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.4 =
+= 1.5.0 =
+
+* Adds a file size setting so you can choose the upload limit that fits your form without editing code.
+* Makes it easier to balance convenience and control by only showing size options your hosting setup can support.
+
+= 1.4.0 =
 
 * Adds CSV export so you can quickly download and work with your saved submissions in Excel or other spreadsheet apps.
 * Makes it easier to review, share, and organize form entries outside WordPress.

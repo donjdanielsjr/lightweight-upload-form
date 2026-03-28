@@ -23,6 +23,7 @@ class OFTUF_Activator {
 		$database = new OFTUF_Database();
 		$database->create_table();
 		add_option( 'oftuf_allowed_extensions', oftuf_get_default_allowed_extensions() );
+		add_option( 'oftuf_max_upload_size', oftuf_get_default_upload_size() );
 		oftuf_ensure_private_upload_dir();
 	}
 }

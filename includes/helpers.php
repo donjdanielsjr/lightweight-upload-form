@@ -23,7 +23,7 @@ function oftuf_get_file_type_labels() {
 }
 
 function oftuf_get_default_allowed_extensions() {
-	return array_keys( oftuf_get_file_type_labels() );
+	return array( 'pdf', 'jpg', 'jpeg', 'png', 'txt' );
 }
 
 function oftuf_get_all_mime_types() {
@@ -63,10 +63,129 @@ function oftuf_get_allowed_mime_types() {
 	return (array) apply_filters( 'oftuf_allowed_mime_types', $mime_types );
 }
 
-function oftuf_get_max_upload_size() {
-	$default_size = 10 * 1024 * 1024;
+function oftuf_parse_size_to_bytes( $size ) {
+	$size = trim( (string) $size );
 
-	return (int) apply_filters( 'oftuf_max_upload_size', $default_size );
+	if ( '' === $size ) {
+		return 0;
+	}
+
+	$unit  = strtolower( substr( $size, -1 ) );
+	$value = (float) $size;
+
+	switch ( $unit ) {
+		case 'g':
+			return (int) round( $value * GB_IN_BYTES );
+		case 'm':
+			return (int) round( $value * MB_IN_BYTES );
+		case 'k':
+			return (int) round( $value * KB_IN_BYTES );
+		default:
+			return (int) round( $value );
+	}
+}
+
+function oftuf_get_server_upload_limit() {
+	$limits = array_filter(
+		array(
+			oftuf_parse_size_to_bytes( ini_get( 'upload_max_filesize' ) ),
+			oftuf_parse_size_to_bytes( ini_get( 'post_max_size' ) ),
+		)
+	);
+
+	if ( empty( $limits ) ) {
+		return 0;
+	}
+
+	return min( $limits );
+}
+
+function oftuf_get_upload_size_choice_values() {
+	return array( 2, 5, 10, 15, 25 );
+}
+
+function oftuf_get_available_upload_size_choices() {
+	$plugin_cap   = 25 * MB_IN_BYTES;
+	$server_limit = oftuf_get_server_upload_limit();
+	$effective_max = $server_limit > 0 ? min( $plugin_cap, $server_limit ) : $plugin_cap;
+	$choices      = array();
+
+	foreach ( oftuf_get_upload_size_choice_values() as $size_mb ) {
+		$size_bytes = $size_mb * MB_IN_BYTES;
+
+		if ( $size_bytes <= $effective_max ) {
+			$choices[ $size_bytes ] = sprintf(
+				/* translators: %d: size in megabytes. */
+				__( '%d MB', 'oft-upload-form' ),
+				$size_mb
+			);
+		}
+	}
+
+	if ( empty( $choices ) && $effective_max > 0 ) {
+		$choices[ $effective_max ] = oftuf_format_file_size( $effective_max );
+	}
+
+	return $choices;
+}
+
+function oftuf_get_default_upload_size() {
+	$choices = array_keys( oftuf_get_available_upload_size_choices() );
+
+	if ( empty( $choices ) ) {
+		return 10 * 1024 * 1024;
+	}
+
+	$preferred = 10 * MB_IN_BYTES;
+
+	if ( in_array( $preferred, $choices, true ) ) {
+		return $preferred;
+	}
+
+	return max( $choices );
+}
+
+function oftuf_get_saved_upload_size() {
+	$choices    = oftuf_get_available_upload_size_choices();
+	$saved_size = (int) get_option( 'oftuf_max_upload_size', oftuf_get_default_upload_size() );
+
+	if ( isset( $choices[ $saved_size ] ) ) {
+		return $saved_size;
+	}
+
+	if ( empty( $choices ) ) {
+		return oftuf_get_default_upload_size();
+	}
+
+	$valid_sizes = array_keys( $choices );
+	rsort( $valid_sizes, SORT_NUMERIC );
+
+	foreach ( $valid_sizes as $valid_size ) {
+		if ( $saved_size >= $valid_size ) {
+			return $valid_size;
+		}
+	}
+
+	return min( $valid_sizes );
+}
+
+function oftuf_get_effective_max_upload_size() {
+	$saved_size   = oftuf_get_saved_upload_size();
+	$server_limit = oftuf_get_server_upload_limit();
+
+	if ( $server_limit > 0 ) {
+		return min( $saved_size, $server_limit );
+	}
+
+	return $saved_size;
+}
+
+function oftuf_get_max_upload_size() {
+	return (int) apply_filters( 'oftuf_max_upload_size', oftuf_get_effective_max_upload_size() );
+}
+
+function oftuf_get_max_upload_size_label() {
+	return oftuf_format_file_size( oftuf_get_max_upload_size() );
 }
 
 function oftuf_is_file_required() {

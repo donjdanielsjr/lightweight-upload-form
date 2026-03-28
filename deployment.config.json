@@ -1,7 +1,7 @@
 {
   "name": "OFT Upload Form",
   "slug": "oft-upload-form",
-  "version": "1.4",
+  "version": "1.5.1",
   "requires": "6.0",
   "tested": "6.8",
   "requires_php": "7.4",
@@ -9,10 +9,17 @@
   "homepage": "https://onefeaturetrap.com/",
   "download_url": "https://onefeaturetrap.com/plugin-downloads/oft-upload-form.zip",
   "release_notes": [
-    "Adds CSV export so you can quickly download and work with your saved submissions in Excel or other spreadsheet apps.",
-    "Makes it easier to review, share, and organize form entries outside WordPress."
+    "Adds a file size setting so you can choose the upload limit that fits your form without editing code.",
+    "Makes it easier to balance convenience and control by only showing size options your hosting setup can support."
   ],
   "release_history": [
+    {
+      "version": "1.5.0",
+      "notes": [
+        "Adds a file size setting so you can choose the upload limit that fits your form without editing code.",
+        "Makes it easier to balance convenience and control by only showing size options your hosting setup can support."
+      ]
+    },
     {
       "version": "1.4.0",
       "notes": [

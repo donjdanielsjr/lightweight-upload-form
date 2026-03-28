@@ -158,6 +158,10 @@ class OFTUF_Admin {
 		$settings_status    = isset( $_GET['oftuf_settings'] ) ? sanitize_key( wp_unslash( $_GET['oftuf_settings'] ) ) : '';
 		$allowed_extensions = oftuf_get_allowed_extensions();
 		$file_type_labels   = oftuf_get_file_type_labels();
+		$upload_size_choices = oftuf_get_available_upload_size_choices();
+		$selected_upload_size = oftuf_get_saved_upload_size();
+		$server_upload_limit = oftuf_get_server_upload_limit();
+		$host_limit_notice = $server_upload_limit > 0 && $server_upload_limit < 25 * MB_IN_BYTES;
 
 		include OFTUF_PLUGIN_PATH . 'templates/upload-settings-page.php';
 	}
@@ -279,6 +283,8 @@ class OFTUF_Admin {
 
 		$allowed_extensions = isset( $_POST['oftuf_allowed_extensions'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['oftuf_allowed_extensions'] ) ) : array();
 		$allowed_extensions = array_values( array_intersect( $allowed_extensions, array_keys( oftuf_get_all_mime_types() ) ) );
+		$upload_size_choices = oftuf_get_available_upload_size_choices();
+		$selected_upload_size = isset( $_POST['oftuf_max_upload_size'] ) ? (int) wp_unslash( $_POST['oftuf_max_upload_size'] ) : 0;
 
 		if ( empty( $allowed_extensions ) ) {
 			wp_safe_redirect(
@@ -293,7 +299,12 @@ class OFTUF_Admin {
 			exit;
 		}
 
+		if ( ! isset( $upload_size_choices[ $selected_upload_size ] ) ) {
+			$selected_upload_size = oftuf_get_default_upload_size();
+		}
+
 		update_option( 'oftuf_allowed_extensions', $allowed_extensions );
+		update_option( 'oftuf_max_upload_size', $selected_upload_size );
 
 		wp_safe_redirect(
 			add_query_arg(
