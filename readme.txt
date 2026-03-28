@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,11 @@ Use the `oftuf_max_upload_size` filter. The default is 10 MB.
 No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is explicitly enabled.
 
 == Changelog ==
+
+= 1.5.1 =
+
+* Adds a file size setting so you can choose the upload limit that fits your form without editing code.
+* Makes it easier to balance convenience and control by only showing size options your hosting setup can support.
 
 = 1.5.0 =
 
