@@ -48,11 +48,11 @@ class OFTUF_Mailer {
 			$download_url = ! empty( $submission['id'] ) ? oftuf_get_submission_download_url( $submission['id'] ) : '';
 
 			$body_lines[] = '';
-			$body_lines[] = sprintf( __( 'Uploaded File: %s', 'oft-upload-form' ), $file_data['original_name'] );
 
 			if ( ! empty( $download_url ) ) {
-				$body_lines[] = sprintf( __( 'Admin Download Link: %s', 'oft-upload-form' ), $download_url );
-				$body_lines[] = __( 'This link works for logged-in administrators only.', 'oft-upload-form' );
+				$body_lines[] = sprintf( __( 'Admin (Only) Download Link (%1$s): %2$s', 'oft-upload-form' ), $file_data['original_name'], $download_url );
+			} else {
+				$body_lines[] = sprintf( __( 'Uploaded File: %s', 'oft-upload-form' ), $file_data['original_name'] );
 			}
 		}
 

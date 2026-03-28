@@ -290,14 +290,11 @@ function oftuf_ensure_private_upload_dir() {
 }
 
 function oftuf_get_submission_download_url( $submission_id ) {
-	return wp_nonce_url(
-		add_query_arg(
-			array(
-				'oftuf_download' => absint( $submission_id ),
-			),
-			admin_url( 'admin.php' )
+	return add_query_arg(
+		array(
+			'oftuf_download' => absint( $submission_id ),
 		),
-		'oftuf_download_submission_' . absint( $submission_id )
+		admin_url( 'admin.php' )
 	);
 }
 

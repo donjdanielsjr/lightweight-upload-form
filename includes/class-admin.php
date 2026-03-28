@@ -345,7 +345,7 @@ class OFTUF_Admin {
 			$action = sanitize_key( wp_unslash( $_POST['action2'] ) );
 		}
 
-		if ( ! in_array( $action, array( 'delete', 'delete_with_attachments' ), true ) ) {
+		if ( 'delete' !== $action ) {
 			return;
 		}
 
@@ -370,11 +370,7 @@ class OFTUF_Admin {
 			exit;
 		}
 
-		$deleted_attachments = 0;
-
-		if ( 'delete_with_attachments' === $action ) {
-			$deleted_attachments = $this->delete_submission_attachments( $submission_ids );
-		}
+		$deleted_attachments = $this->delete_submission_attachments( $submission_ids );
 
 		$deleted_count = $this->database->delete_submissions( $submission_ids );
 
@@ -407,10 +403,6 @@ class OFTUF_Admin {
 		}
 
 		$submission_id = absint( $_GET['oftuf_download'] );
-
-		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ?? '' ) ), 'oftuf_download_submission_' . $submission_id ) ) {
-			wp_die( esc_html__( 'Security check failed.', 'oft-upload-form' ) );
-		}
 
 		$submissions = $this->database->get_submissions_by_ids( array( $submission_id ) );
 		$submission  = ! empty( $submissions ) ? $submissions[0] : null;

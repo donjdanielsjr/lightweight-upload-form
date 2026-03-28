@@ -20,20 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php
 				echo esc_html(
 					sprintf(
-						/* translators: %d: number of deleted submissions. */
-						_n( '%d submission deleted.', '%d submissions deleted.', $deleted, 'oft-upload-form' ),
-						$deleted
-					)
-				);
-				?>
-			</p>
-		</div>
-	<?php elseif ( 'delete_with_attachments' === $bulk_status && $deleted > 0 ) : ?>
-		<div class="notice notice-success is-dismissible">
-			<p>
-				<?php
-				echo esc_html(
-					sprintf(
 						/* translators: 1: number of deleted submissions, 2: number of deleted files. */
 						_n(
 							'%1$d submission deleted. %2$d file deleted.',
@@ -41,7 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 							$deleted,
 							'oft-upload-form'
 						),
-						$deleted,
+						$deleted
+						,
 						$deleted_attachments
 					)
 				);
@@ -70,7 +57,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<select name="action" id="bulk-action-selector-top">
 					<option value="-1"><?php esc_html_e( 'Bulk actions', 'oft-upload-form' ); ?></option>
 					<option value="delete"><?php esc_html_e( 'Delete', 'oft-upload-form' ); ?></option>
-					<option value="delete_with_attachments"><?php esc_html_e( 'Delete with files', 'oft-upload-form' ); ?></option>
 				</select>
 				<?php submit_button( __( 'Apply', 'oft-upload-form' ), 'action', 'doaction', false ); ?>
 			</div>
@@ -146,7 +132,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<select name="action2" id="bulk-action-selector-bottom">
 					<option value="-1"><?php esc_html_e( 'Bulk actions', 'oft-upload-form' ); ?></option>
 					<option value="delete"><?php esc_html_e( 'Delete', 'oft-upload-form' ); ?></option>
-					<option value="delete_with_attachments"><?php esc_html_e( 'Delete with files', 'oft-upload-form' ); ?></option>
 				</select>
 				<?php submit_button( __( 'Apply', 'oft-upload-form' ), 'action', 'doaction2', false ); ?>
 			</div>
