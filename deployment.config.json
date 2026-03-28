@@ -1,18 +1,25 @@
 {
   "name": "OFT Upload Form",
   "slug": "oft-upload-form",
-  "_note": "Previous build: 1.7.0-beta.0",
-  "version": "1.7.0",
+  "_note": "Beta syntax: 1.7.0-beta.1",
+  "version": "1.7.1-beta.1",
   "requires": "6.0",
   "tested": "6.9.4",
   "requires_php": "7.4",
   "last_updated": "2026-03-28",
   "homepage": "https://onefeaturetrap.com/",
   "release_notes": [
-      "Adds a file size setting so you can choose the upload limit that fits your form without editing code.",
-      "Lets you allow larger file sizes all the way up to what your website can support."
+      "Adds Stable and Beta update tracks so you can test new versions without affecting sites that should stay on production releases.",
+      "Makes switching between tracks smoother so it is easier to move a site to the version you want with less manual work."
   ],
   "release_history": [
+    {
+      "version": "1.7.0",
+      "notes": [
+        "Adds Stable and Beta update tracks so you can test new versions without affecting sites that should stay on production releases.",
+        "Makes switching between tracks smoother so it is easier to move a site to the version you want with less manual work."
+      ]
+    },
     {
       "version": "1.6.0",
       "notes": [

@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,10 +47,15 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
+= 1.7.1-beta.1 =
+
+* Adds Stable and Beta update tracks so you can test new versions without affecting sites that should stay on production releases.
+* Makes switching between tracks smoother so it is easier to move a site to the version you want with less manual work.
+
 = 1.7.0 =
 
-* Adds a file size setting so you can choose the upload limit that fits your form without editing code.
-* Lets you allow larger file sizes all the way up to what your website can support.
+* Adds Stable and Beta update tracks so you can test new versions without affecting sites that should stay on production releases.
+* Makes switching between tracks smoother so it is easier to move a site to the version you want with less manual work.
 
 = 1.6.0 =
 
