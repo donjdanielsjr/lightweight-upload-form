@@ -2,7 +2,7 @@
   "name": "OFT Upload Form",
   "slug": "oft-upload-form",
   "_note": "Beta syntax: 1.8.0-beta.1",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "requires": "6.0",
   "tested": "6.9.4",
   "requires_php": "7.4",

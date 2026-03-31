@@ -47,7 +47,7 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.8.3 =
+= 1.8.4 =
 
 * Adds simple appearance controls so you can match the form text and buttons to your site without custom CSS.
 * Makes the form feel more at home with your brand by letting you choose text color, button color, and button text color in settings.
