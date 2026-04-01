@@ -4,7 +4,7 @@ Tags: contact form, file upload, shortcode
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.8.3
+Stable tag: 1.8.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,7 @@ No. Data is preserved unless the `oftuf_delete_data_on_uninstall` option is expl
 
 == Changelog ==
 
-= 1.8.4 =
+= 1.8.5 =
 
 * Adds simple appearance controls so you can match the form text and buttons to your site without custom CSS.
 * Makes the form feel more at home with your brand by letting you choose text color, button color, and button text color in settings.
